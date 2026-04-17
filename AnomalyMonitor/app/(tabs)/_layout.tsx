@@ -1,6 +1,8 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { colors, spacing } from '../../constants/theme';
 
 export default function TabsLayout() {
     return (
@@ -9,15 +11,15 @@ export default function TabsLayout() {
                 headerShown: false,
                 tabBarShowLabel: false,
                 tabBarStyle: {
-                    backgroundColor: '#0f172a',
-                    borderTopColor: '#1e293b',
+                    backgroundColor: colors.card,
+                    borderTopColor: colors.card,
                     borderTopWidth: 1,
                     height: 74,
                     paddingTop: 8,
                     paddingBottom: 10,
                 },
-                tabBarActiveTintColor:'#38bdf8',
-                tabBarInactiveTintColor:'#94a3b8',
+                tabBarActiveTintColor:colors.ctaaccent,
+                tabBarInactiveTintColor:'#000000',
             }}
         >
             <Tabs.Screen
@@ -34,7 +36,7 @@ export default function TabsLayout() {
                 options={{
                     title:'New Anomaly',
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="home" color={color} size={size} />
+                        <Ionicons name="add-circle" color={color} size={size} />
                     ),
                 }}
             />
@@ -43,7 +45,7 @@ export default function TabsLayout() {
                 options={{
                     title:'My Anomalies',
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="home" color={color} size={size} />
+                        <MaterialCommunityIcons name="invoice-list" color={color} size={size} />
                     ),
                 }}
             />
