@@ -8,13 +8,13 @@ type Props = {
 export default function TextField({ text }: Props) {
     return (
         <View>
-            <Text style={styles.title}>{text}</Text>
+            <Text style={styles.text}>{text}</Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    title: {
+    text: {
         color: colors.textsecondary,
         fontSize: fontsize.b1,
         fontWeight: '400',

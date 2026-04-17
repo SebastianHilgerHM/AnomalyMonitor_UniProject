@@ -1,6 +1,7 @@
 export const colors = {
   bg: '#070b13',
   card: '#101725',
+  border: '#173A63',
   textprimary: '#F8FAFC',
   textsecondary: '#94A3B8',
   textaccent: '#22D3EE',

@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
     },
     title: {
-        color: colors.text,
+        color: colors.textprimary,
         fontSize: fontsize.h2,
         fontWeight: '700',
         marginBottom: spacing.sm,
     },
     desc: {
-        color: colors.muted,
+        color: colors.textsecondary,
         fontSize: fontsize.b1,
     },
 });
