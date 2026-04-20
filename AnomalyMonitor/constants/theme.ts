@@ -13,6 +13,7 @@ export const fontsize = {
   h2: 18,
   b1: 20,
   b2: 18,
+  b3: 12,
 }
 
 export const spacing = {

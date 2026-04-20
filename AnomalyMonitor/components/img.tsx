@@ -1,4 +1,4 @@
-import { View, Image, ImageSourcePropType, ImageStyle, StyleProp, StyleSheet } from 'react-native';
+import { Image, ImageSourcePropType, ImageStyle, StyleProp, StyleSheet } from 'react-native';
 import { radius, spacing } from '../constants/theme';
 
 
