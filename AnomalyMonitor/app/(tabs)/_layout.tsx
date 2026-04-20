@@ -9,17 +9,17 @@ export default function TabsLayout() {
         <Tabs
             screenOptions={{
                 headerShown: false,
-                tabBarShowLabel: false,
+                tabBarShowLabel: true,
                 tabBarStyle: {
                     backgroundColor: colors.card,
                     borderTopColor: colors.card,
                     borderTopWidth: 1,
                     height: 74,
-                    paddingTop: 8,
                     paddingBottom: 10,
                 },
-                tabBarActiveTintColor:colors.ctaaccent,
-                tabBarInactiveTintColor:'#000000',
+                tabBarActiveTintColor: '#000000',
+                tabBarInactiveTintColor:'#E2E8F0',
+                tabBarActiveBackgroundColor: colors.ctaaccent,
             }}
         >
             <Tabs.Screen
@@ -34,7 +34,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="newanomaly"
                 options={{
-                    title:'New Anomaly',
+                    title:'Add',
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="add-circle" color={color} size={size} />
                     ),
@@ -43,7 +43,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="myanomalies"
                 options={{
-                    title:'My Anomalies',
+                    title:'List',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="invoice-list" color={color} size={size} />
                     ),
