@@ -1,4 +1,5 @@
 import { StyleSheet, ScrollView } from 'react-native';
+import { useState } from 'react';
 import Title from '../../components/title';
 import SubTitle from '../../components/subtitle';
 import AppTextInput from '../../components/apptextinput';
@@ -7,6 +8,9 @@ import Button from '../../components/button';
 import { spacing, colors } from '../../constants/theme';
 
 export default function NewAnomaly() {
+  const [name,setName] = useState('');
+  const [description, setDescription] = useState('');
+
   return (
     <ScrollView 
       style={styles.container}
@@ -17,14 +21,16 @@ export default function NewAnomaly() {
       <Title title="New Anomaly" />
       <AppTextInput 
         label="NAME"
-        value='Enter mission name here'
-        editable={false}
+        value={name}
+        onChangeText={setName}
+        editable={true}
       />
       <AppTextInput 
         label="DESCRIPTION"
-        value='Describe your new anomaly here'
+        value={description}
+        onChangeText={setDescription}
         multiline
-        editable={false}
+        editable={true}
       />
       <AppImageInput
         label="IMAGE"
