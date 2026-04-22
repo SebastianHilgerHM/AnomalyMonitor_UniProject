@@ -1,5 +1,6 @@
 import { ScrollView, View, Text, Image, StyleSheet, ImageSourcePropType, ImageStyle, StyleProp, Pressable } from 'react-native';
 import { colors, spacing, fontsize } from '../constants/theme';
+import Button from './button';
 
 type Props = {
     date: string;
@@ -25,6 +26,9 @@ export default function SearchDetail({ date, source, alt, style, title, author, 
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.author}>{author}</Text>
             <Text style={styles.desc}>{desc}</Text>
+            <View style={styles.button}>
+                <Button label='Save to My Anomalies'></Button>
+            </View>
         </ScrollView>
     )
 }
@@ -35,13 +39,14 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bg,
         gap: spacing.sm,
     },
+    button: {
+        padding: spacing.sm,
+    },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: spacing.sm,
-        paddingLeft: spacing.sm,
-        paddingRight: spacing.sm,
+        padding: spacing.sm,
     },
     date: {
         color: colors.textsecondary,

@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.card,
         width: '100%',
         height: 120,
-        marginTop: spacing.md,
         flexDirection: 'row',
         gap: spacing.sm,
     },

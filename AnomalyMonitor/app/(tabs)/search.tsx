@@ -3,11 +3,12 @@ import Title from '../../components/title';
 import SubTitle from '../../components/subtitle';
 import DateInput from '../../components/dateinput';
 import SearchCard from '../../components/searchcard';
+import Button from '../../components/button';
 import { spacing, colors } from '../../constants/theme';
 
 export default function Search() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <SubTitle title="EXPLORE RECORDS" />
       <Title title="APOD Search" />
       <View style={styles.dateRow}>
@@ -18,6 +19,7 @@ export default function Search() {
           <DateInput label="TO" placeholder='26. Mar 2026' />
         </View>
       </View>
+      <Button label='Search'></Button>
       <SearchCard
         source={require('../../assets/images/heroimage.jpg')}
         alt="Placeholder"
@@ -44,6 +46,9 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     paddingTop: spacing.xl * 2,
     backgroundColor: colors.bg,
+  },
+  content: {
+    gap: spacing.md,
   },
   dateCol: {
     flex: 1,
