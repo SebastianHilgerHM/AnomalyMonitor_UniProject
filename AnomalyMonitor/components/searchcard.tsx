@@ -1,19 +1,45 @@
-import { View, Text, Image, StyleSheet, ImageSourcePropType, ImageStyle, StyleProp,} from 'react-native';
+import { View, Text, Image, StyleSheet, ImageSourcePropType, ImageStyle, StyleProp, Pressable, Modal } from 'react-native';
+import { useState } from 'react';
 import { colors, spacing, fontsize, radius } from '../constants/theme';
+import SearchDetail from './searchdetail';
 
 type Props = {
     title: string;
     date: string;
+    author?: string;
     desc: string;
     source: ImageSourcePropType;
     alt?: string; 
     style?: StyleProp<ImageStyle>;
 };
 
-export default function SearchCard({title, date, desc, source, alt, style}:Props) {
+export default function SearchCard({title, date, desc, source, alt, style, author}:Props) {
+    const [showPanel, setShowPanel] = useState(false);
+
     return (
         <View style={styles.container}>
-            <Image source={source} accessibilityLabel={alt} style={[styles.image, style]} />
+            <Pressable style={styles.pressable} onPress={() => setShowPanel(true)}>
+                <Image source={source} accessibilityLabel={alt} style={[styles.image, style]} />
+            </Pressable>
+
+            <Modal
+                visible={showPanel}
+                animationType="slide"
+                presentationStyle="fullScreen"
+                onRequestClose={() => setShowPanel(false)}
+            >
+                <SearchDetail
+                    source={source}
+                    alt={alt}
+                    style={style}
+                    date={date}
+                    title={title}
+                    author={author ?? 'Unknown'}
+                    desc={desc}
+                    onClose={() => setShowPanel(false)}
+                />
+            </Modal>
+
             <View style={styles.textwrap}>
                 <Text style={styles.date}>{date}</Text>
                 <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{title}</Text>
@@ -33,13 +59,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: spacing.sm,
     },
+    pressable: {
+        height: '100%',
+        width: '30%',
+    },
     textwrap: {
         flex: 1,
         marginRight: spacing.sm,
     },
     image: {
         height: '100%',
-        width: '30%',
+        width: '100%',
         borderTopLeftRadius: radius.md,
         borderBottomLeftRadius: radius.md,
     },

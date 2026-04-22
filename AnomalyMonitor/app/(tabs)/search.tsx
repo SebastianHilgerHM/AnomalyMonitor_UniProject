@@ -18,46 +18,13 @@ export default function Search() {
           <DateInput label="TO" placeholder='26. Mar 2026' />
         </View>
       </View>
-
       <SearchCard
         source={require('../../assets/images/heroimage.jpg')}
         alt="Placeholder"
         style={{}}
         date="26-03-2026"
         title="Black Holes and Neutron Stars: 218 Mergers and Counting"
-        desc="What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves..."
-      />
-      <SearchCard
-        source={require('../../assets/images/heroimage.jpg')}
-        alt="Placeholder"
-        style={{}}
-        date="26-03-2026"
-        title="Black Holes and Neutron Stars: 218 Mergers and Counting"
-        desc="What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves..."
-      />
-      <SearchCard
-        source={require('../../assets/images/heroimage.jpg')}
-        alt="Placeholder"
-        style={{}}
-        date="26-03-2026"
-        title="Black Holes and Neutron Stars: 218 Mergers and Counting"
-        desc="What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves..."
-      />
-      <SearchCard
-        source={require('../../assets/images/heroimage.jpg')}
-        alt="Placeholder"
-        style={{}}
-        date="26-03-2026"
-        title="Black Holes and Neutron Stars: 218 Mergers and Counting"
-        desc="What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves..."
-      />
-      <SearchCard
-        source={require('../../assets/images/heroimage.jpg')}
-        alt="Placeholder"
-        style={{}}
-        date="26-03-2026"
-        title="Black Holes and Neutron Stars: 218 Mergers and Counting"
-        desc="What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves..."
+        desc="What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves...What is the sound of two black holes merging in deep space? Sound Waves don't propagate in vacuum, but gravitational waves..."
       />
       <SearchCard
         source={require('../../assets/images/heroimage.jpg')}
