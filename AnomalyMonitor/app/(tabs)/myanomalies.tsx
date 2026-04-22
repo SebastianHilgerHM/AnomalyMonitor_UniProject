@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import Title from '../../components/title';
 import SubTitle from '../../components/subtitle';
-import { spacing, colors } from '../../constants/theme';
+import { spacing, colors, fontsize } from '../../constants/theme';
 import AnomalyCard from '../../components/anomalycard';
 import { useAnomalies } from '../../context/anomalyprovider';
 
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   },
   empty: {
     marginTop: spacing.md,
-    color:colors.textsecondary,
+    color:colors.textaccent,
+    fontSize: fontsize.b2,
   },
 });

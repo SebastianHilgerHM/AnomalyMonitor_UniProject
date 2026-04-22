@@ -12,6 +12,7 @@ import { spacing, colors } from '../../constants/theme';
 export default function NewAnomaly() {
   const [name,setName] = useState('');
   const [description, setDescription] = useState('');
+  const [imageUri, setImageUri] = useState<string|null>(null);
   const {addAnomaly} = useAnomalies();
   const router = useRouter();
 
@@ -24,10 +25,12 @@ export default function NewAnomaly() {
     addAnomaly({
       title:cleanName,
       description: cleanDescription,
+      imageUri: imageUri ?? undefined,
     });
 
     setName('');
     setDescription('');
+    setImageUri(null);
 
     router.push('/(tabs)/myanomalies');
   };
@@ -55,7 +58,9 @@ export default function NewAnomaly() {
         />
       <AppImageInput
         label="IMAGE"
-        source={require('../../assets/images/heroimage.jpg')}
+        value={imageUri}
+        onChangeImage={setImageUri}
+        placeholderSource={require('../../assets/images/heroimage.jpg')}
         />
       <Button label="SAVE ANOMALY" onPress={handleSave} />
     </ScrollView>
