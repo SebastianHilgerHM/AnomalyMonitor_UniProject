@@ -1,15 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet } from 'react-native';
 import { colors, fontsize, radius, spacing } from '../constants/theme';
 
 type Props = {
     label: string;
+    onPress?: () => void;
 };
 
-export default function Button({ label }:Props ) {
+export default function Button({ label, onPress }:Props ) {
     return (
-        <View style={styles.container}>
+        <Pressable style={styles.container} onPress={onPress}>
             <Text style={styles.text}>{label}</Text>
-        </View>
+        </Pressable>
     );
 };
 

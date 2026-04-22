@@ -1,5 +1,6 @@
-import { SafeAreaViewBase, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { useAnomalies } from '../../context/anomalyprovider';
 import Title from '../../components/title';
 import SubTitle from '../../components/subtitle';
@@ -12,17 +13,23 @@ export default function NewAnomaly() {
   const [name,setName] = useState('');
   const [description, setDescription] = useState('');
   const {addAnomaly} = useAnomalies();
+  const router = useRouter();
 
   const handleSave = () => {
     const cleanName = name.trim();
     const cleanDescription= description.trim();
+
     if (!cleanName || !cleanDescription) return;
+
     addAnomaly({
       title:cleanName,
       description: cleanDescription,
     });
+
     setName('');
     setDescription('');
+
+    router.push('/(tabs)/myanomalies');
   };
 
   return (
@@ -30,7 +37,7 @@ export default function NewAnomaly() {
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
-      >
+    >
       <SubTitle title="CREATE A REPORT" />
       <Title title="New Anomaly" />
       <AppTextInput 
