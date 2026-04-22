@@ -1,22 +1,38 @@
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import Title from '../../components/title';
 import SubTitle from '../../components/subtitle';
 import { spacing, colors } from '../../constants/theme';
 import AnomalyCard from '../../components/anomalycard';
+import { useAnomalies } from '../../context/anomalyprovider';
 
 export default function MyAnomalies() {
+  const { anomalies } = useAnomalies();
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <SubTitle title="ASSIGNED TO YOU" />
       <Title title="My Anomalies" />
-      <AnomalyCard 
-        title="Mission Section 31"
-        description='A very complicated mission.'
-        source={require('../../assets/images/heroimage.jpg')}
-        alt="Placeholder"
-        style={{}}
-        timestamp='26/03/2026 7:09:50 PM'
-      />
+
+      {anomalies.length === 0 ? (
+        <Text style={styles.empty}>No anomalies saved yet.</Text>
+      ) : (
+        anomalies.map((item) => (
+          <AnomalyCard
+            key={item.id}
+            title={item.title}
+            description={item.description}
+            //author={item.author}
+            source={
+              item.imageUri
+                ? {uri: item.imageUri }
+                : require('../../assets/images/heroimage.jpg')
+            }
+            alt={item.title}
+            style={{}}
+            timestamp={item.timestamp}
+          />
+        ))
+      )}
     </ScrollView>
   );
 }
@@ -24,8 +40,15 @@ export default function MyAnomalies() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.md,
-    paddingTop: spacing.xl * 2,
     backgroundColor: colors.bg,
+  },
+  content: {
+    padding:spacing.md,
+    paddingTop: spacing.xl * 2,
+    paddingBottom: spacing.xl,
+  },
+  empty: {
+    marginTop: spacing.md,
+    color:colors.textsecondary,
   },
 });
