@@ -31,7 +31,7 @@ export default function WorldMap() {
         </View>
         <View style={styles.headerButtons}>
           <SmallButton label="Reload" onPress={() => void reload()} />
-          <SmallButton label="Back" onPress={() => router.back()} />
+          <SmallButton label="Back" onPress={() => router.replace('/(tabs)/search')} />
         </View>
       </View>
 

@@ -6,7 +6,7 @@ type Props = {
     label: string;
     value: string | null;
     onChangeImage: (uri: string|null) => void;
-    placeholderSource: ImageSourcePropType;
+    placeholderSource?: ImageSourcePropType;
 };
 
 export default function AppImageInput({ label, value, onChangeImage, placeholderSource}: Props) {
@@ -27,13 +27,17 @@ export default function AppImageInput({ label, value, onChangeImage, placeholder
         }
     };
 
-    const source = value ? {uri:value} : placeholderSource;
+    const source = value ? { uri: value } : placeholderSource;
 
     return (
         <View style={styles.wrapper}>
             <Text style={styles.label}>{label}</Text>
             <Pressable onPress={pickImage}>
-                <Image source={source} style={[styles.image, { height: imageHeight}]} resizeMode="cover" />
+                {source ? (
+                    <Image source={source} style={[styles.image, { height: imageHeight }]} resizeMode="cover" />
+                ) : (
+                    <View style={[styles.image, styles.blankCard, { height: imageHeight }]} />
+                )}
             </Pressable>
             <Text style={styles.imageinfo}>Tap to add an image.</Text>
         </View>
@@ -59,5 +63,9 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: radius.md,
         backgroundColor: colors.card,
+    },
+    blankCard: {
+        borderWidth: 1,
+        borderColor: colors.border,
     },
 });

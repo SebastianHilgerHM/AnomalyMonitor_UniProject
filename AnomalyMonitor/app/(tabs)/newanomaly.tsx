@@ -60,7 +60,6 @@ export default function NewAnomaly() {
         label="IMAGE"
         value={imageUri}
         onChangeImage={setImageUri}
-        placeholderSource={require('../../assets/images/heroimage.jpg')}
         />
       <Button label="SAVE ANOMALY" onPress={handleSave} />
     </ScrollView>

@@ -45,11 +45,11 @@ export default function Search() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <SubTitle title="EXPLORE RECORDS" />
       <View style={styles.headerRow}>
-        <Title title="APOD Search" />
+        <SubTitle title="EXPLORE RECORDS" />
         <SmallButton label="Map" onPress={() => router.push('/(tabs)/worldmap')} />
       </View>
+      <Title title="APOD Search" />
       <View style={styles.dateRow}>
         <View style={styles.dateCol}>
           <Text style={styles.label}>FROM</Text>
