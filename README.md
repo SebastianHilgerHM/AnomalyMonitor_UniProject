@@ -118,23 +118,6 @@ node scripts/generate-worldmap-land-mask.cjs
 - `DEMO_KEY` may hit rate limits (`429`) or temporary service errors (`503`).
 - The app includes retry handling and user-friendly error messages.
 
-## What Is Currently Missing / Could Be Improved
-
-1. Persistent storage
-- Anomalies are in-memory only and reset on app restart.
-
-2. Environment-based API key
-- API key should be moved to env/config instead of hardcoded `DEMO_KEY`.
-
-3. Tests
-- No automated unit/integration tests yet.
-
-4. Accessibility and UX polish
-- More accessibility labels and stronger contrast checks can be added.
-
-5. CI / quality gates
-- No lint/test CI pipeline configured yet.
-
 ## Course Context
 
 Created as part of a university mobile development course.
