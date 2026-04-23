@@ -11,7 +11,7 @@ type Props = {
   author: string;
   desc: string;
   onClose: () => void;
-  onSave: () => void;
+  onSave?: () => void;
 };
 
 export default function SearchDetail({
@@ -42,9 +42,11 @@ export default function SearchDetail({
       <Text style={styles.author}>{author}</Text>
       <Text style={styles.desc}>{desc}</Text>
 
-      <View style={styles.button}>
-        <Button label="Save to My Anomalies" onPress={onSave} />
-      </View>
+      {onSave && (
+        <View style={styles.button}>
+          <Button label="Save to My Anomalies" onPress={onSave} />
+        </View>
+      )}
     </ScrollView>
   );
 }

@@ -21,7 +21,7 @@ export default function MyAnomalies() {
             key={item.id}
             title={item.title}
             description={item.description}
-            //author={item.author}
+            author={item.author}
             source={
               item.imageUri
                 ? {uri: item.imageUri }

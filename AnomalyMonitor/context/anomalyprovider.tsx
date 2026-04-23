@@ -13,6 +13,7 @@ type AddAnomalyInput = {
     title: string;
     description: string;
     imageUri?: string;
+    author?: string;
 };
 
 type AnomalyContextType = {
@@ -32,7 +33,7 @@ export function AnomalyProvider({ children }: { children: React.ReactNode }) {
             description: input.description,
             imageUri: input.imageUri,
             timestamp: new Date().toLocaleString(),
-            author: 'Sebastian Hilger',
+            author: input.author ?? 'Unknown',
         };
         setAnomalies((prev) => [item, ...prev]);
     };

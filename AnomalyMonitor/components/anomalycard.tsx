@@ -1,23 +1,53 @@
-import { View, Text, Image, ImageSourcePropType, ImageStyle, StyleProp, StyleSheet } from 'react-native';
+import { View, Text, Image, ImageSourcePropType, ImageStyle, StyleProp, StyleSheet, Pressable, Modal } from 'react-native';
+import { useState } from 'react';
 import { colors, spacing, radius, fontsize } from '../constants/theme';
+import SearchDetail from './searchdetail';
 
 type Props = {
     title: string;
     description: string;
+    author: string;
     source: ImageSourcePropType;
     alt?: string; 
     style?: StyleProp<ImageStyle>;
     timestamp: string;
 };
 
-export default function AnomalyCard({ title, description, source, alt, style, timestamp }: Props) {
+export default function AnomalyCard({ title, description, author, source, alt, style, timestamp }: Props) {
+    const [showPanel, setShowPanel] = useState(false);
+
     return (
-        <View style={styles.card}>
-            <Image source={source} accessibilityLabel={alt} style={[styles.image, style]} />
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.desc}>{description}</Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
-        </View>
+        <>
+            <Pressable onPress={() => setShowPanel(true)}>
+                <View style={styles.card}>
+                    <Image source={source} accessibilityLabel={alt} style={[styles.image, style]} />
+                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.author}>{author}</Text>
+                    <Text style={styles.desc} numberOfLines={3} ellipsizeMode="tail">
+                        {description}
+                    </Text>
+                    <Text style={styles.timestamp}>{timestamp}</Text>
+                </View>
+            </Pressable>
+
+            <Modal
+                visible={showPanel}
+                animationType="slide"
+                presentationStyle="fullScreen"
+                onRequestClose={() => setShowPanel(false)}
+            >
+                <SearchDetail
+                    date={timestamp}
+                    source={source}
+                    alt={alt}
+                    style={style}
+                    title={title}
+                    author={author}
+                    desc={description}
+                    onClose={() => setShowPanel(false)}
+                />
+            </Modal>
+        </>
     );
 }
 
@@ -48,6 +78,14 @@ const styles = StyleSheet.create({
         fontSize: fontsize.b2,
         fontWeight: '300',
         marginBottom: spacing.sm,
+        paddingLeft: spacing.lg,
+        paddingRight: spacing.lg,
+    },
+    author: {
+        color: colors.textaccent,
+        fontSize: fontsize.b3,
+        fontWeight: '500',
+        marginBottom: spacing.xs,
         paddingLeft: spacing.lg,
         paddingRight: spacing.lg,
     },

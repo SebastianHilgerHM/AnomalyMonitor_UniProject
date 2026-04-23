@@ -12,6 +12,7 @@ type ApodApiItem = {
   title: string;
   explanation: string;
   media_type: string;
+  copyright?: string;
   url?: string;
   hdurl?: string;
 };
@@ -22,9 +23,16 @@ type SearchItem = {
   description: string;
   imageUrl: string;
   category: string;
+  author: string;
 }
 
 const APOD_API_KEY = 'DEMO_KEY';
+const MAX_RETRIES = 2;
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function formatDateForApi(d: Date) {
   const year = d.getFullYear();
@@ -49,14 +57,14 @@ export default function Search() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string|null>(null);
-  const [results, setresults] = useState<SearchItem[]>([]);
+  const [results, setResults] = useState<SearchItem[]>([]);
 
   const fromLabel = useMemo(() => formatDateForUI(fromDate), [fromDate]);
   const toLabel = useMemo(() => formatDateForUI(toDate), [toDate]);
 
   const onChangeFrom = (event:DateTimePickerEvent, selectedDate?: Date) => {
     if (Platform.OS === 'android') setShowFromPicker(false);
-    if (selectedDate) setToDate(selectedDate);
+    if (selectedDate) setFromDate(selectedDate);
   }
 
   const onChangeTo = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -79,12 +87,34 @@ export default function Search() {
 
       const url = 'https://api.nasa.gov/planetary/apod?api_key=' + APOD_API_KEY + '&start_date=' + startDate + '&end_date=' + endDate;
 
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('APOD request failed with status ' + response.status);
+      let response: Response | null = null;
+      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        const currentResponse = await fetch(url);
+        if (currentResponse.ok) {
+          response = currentResponse;
+          break;
+        }
+
+        const shouldRetry = RETRYABLE_STATUS.has(currentResponse.status) && attempt < MAX_RETRIES;
+        if (!shouldRetry) {
+          if (currentResponse.status === 503) {
+            throw new Error('NASA APOD is temporarily unavailable (503). Please try again in a minute.');
+          }
+          if (currentResponse.status === 429) {
+            throw new Error('Too many APOD requests right now (429). Please wait a bit and retry.');
+          }
+          throw new Error('APOD request failed with status ' + currentResponse.status);
+        }
+
+        await wait(800 * (attempt + 1));
       }
 
-      const data = (await response.json()) as ApodApiItem[];
+      if (!response) {
+        throw new Error('APOD request failed after multiple retries.');
+      }
+
+      const payload = (await response.json()) as ApodApiItem[] | ApodApiItem;
+      const data = Array.isArray(payload) ? payload : [payload];
 
       const imagesOnly = data.filter((item) => item.media_type === 'image').map((item) => ({
         date: item.date,
@@ -92,12 +122,13 @@ export default function Search() {
         description: item.explanation,
         imageUrl:  item.hdurl || item.url || '',
         category: 'APOD image',
+        author: item.copyright?.trim() || 'Unknown APOD author',
       })).filter((item) => item.imageUrl.length > 0).sort((a, b) => (a.date < b.date ? 1 : -1));
-      setresults(imagesOnly);
+      setResults(imagesOnly);
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Unknown error';
       setError(message);
-      setresults([]);
+      setResults([]);
     } finally {
       setLoading(false);
     }
@@ -115,9 +146,9 @@ export default function Search() {
           </Pressable>
         </View>
         <View style={styles.dateCol}>
-          <Text style={styles.label}>FROM</Text>
-          <Pressable style={styles.dateBox} onPress={() => setShowFromPicker(true)}>
-            <Text style={styles.dateText}>{fromLabel}</Text>
+          <Text style={styles.label}>TO</Text>
+          <Pressable style={styles.dateBox} onPress={() => setShowToPicker(true)}>
+            <Text style={styles.dateText}>{toLabel}</Text>
           </Pressable>
         </View>
       </View>
@@ -142,7 +173,7 @@ export default function Search() {
           date={item.date}
           title={item.title}
           desc={item.description}
-          author={item.category}
+          author={item.author}
         />
       ))}
     </ScrollView>

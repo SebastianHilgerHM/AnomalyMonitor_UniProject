@@ -41,6 +41,7 @@ export default function SearchCard({ title, date, desc, source, alt, style, auth
       title,
       description: desc,
       imageUri,
+      author: author ?? 'Unknown APOD author',
     });
 
     setShowPanel(false);
