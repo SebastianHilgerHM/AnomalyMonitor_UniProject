@@ -1,10 +1,12 @@
 import { View, ScrollView, StyleSheet, Text, Pressable, ActivityIndicator, Platform } from 'react-native';
 import { useMemo, useState } from 'react';
+import { useRouter } from 'expo-router';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import Title from '../../components/title';
 import SubTitle from '../../components/subtitle';
 import SearchCard from '../../components/searchcard';
 import Button from '../../components/button';
+import SmallButton from '../../components/smallbutton';
 import { spacing, colors, radius, fontsize } from '../../constants/theme';
 import { useApodSearch } from '../../hooks/useApodSearch';
 
@@ -13,6 +15,7 @@ function formatDateForUI(d: Date) {
 }
 
 export default function Search() {
+  const router = useRouter();
   const [fromDate, setFromDate] = useState<Date>(() =>  {
     const d = new Date();
     d.setDate(d.getDate() - 7);
@@ -43,7 +46,10 @@ export default function Search() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <SubTitle title="EXPLORE RECORDS" />
-      <Title title="APOD Search" />
+      <View style={styles.headerRow}>
+        <Title title="APOD Search" />
+        <SmallButton label="Map" onPress={() => router.push('/(tabs)/worldmap')} />
+      </View>
       <View style={styles.dateRow}>
         <View style={styles.dateCol}>
           <Text style={styles.label}>FROM</Text>
@@ -98,6 +104,11 @@ const styles = StyleSheet.create({
   },
   dateCol: {
     flex: 1,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   dateRow: {
     flexDirection: 'row',

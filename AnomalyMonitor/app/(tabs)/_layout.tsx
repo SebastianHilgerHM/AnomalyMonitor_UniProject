@@ -58,6 +58,12 @@ export default function TabsLayout() {
                     ),
                 }}
             />
+            <Tabs.Screen
+                name="worldmap"
+                options={{
+                    href: null,
+                }}
+            />
         </Tabs>
     );
 }
