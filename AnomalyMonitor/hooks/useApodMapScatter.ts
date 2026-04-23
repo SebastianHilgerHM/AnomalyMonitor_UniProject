@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { WORLDMAP_LAND_MASK } from '../constants/worldmapLandMask';
 
 type ApodApiItem = {
   date: string;
@@ -63,10 +64,25 @@ function buildScatterPoint(item: ApodApiItem): MapScatterPoint {
   const seedX = hashString(key + '|x');
   const seedY = hashString(key + '|y');
 
-  const marginX = 0.03;
-  const marginY = 0.08;
-  const xRatio = marginX + ratioFromSeed(seedX) * (1 - marginX * 2);
-  const yRatio = marginY + ratioFromSeed(seedY) * (1 - marginY * 2);
+  let xRatio: number;
+  let yRatio: number;
+
+  if (WORLDMAP_LAND_MASK.length > 0) {
+    const index = seedX % WORLDMAP_LAND_MASK.length;
+    const [maskX, maskY] = WORLDMAP_LAND_MASK[index];
+
+    // tiny deterministic jitter helps avoid exact overlap on coarse grid points
+    const jitterX = (ratioFromSeed(seedY) - 0.5) * 0.01;
+    const jitterY = (ratioFromSeed(seedX) - 0.5) * 0.01;
+
+    xRatio = Math.min(0.995, Math.max(0.005, maskX + jitterX));
+    yRatio = Math.min(0.995, Math.max(0.005, maskY + jitterY));
+  } else {
+    const marginX = 0.03;
+    const marginY = 0.08;
+    xRatio = marginX + ratioFromSeed(seedX) * (1 - marginX * 2);
+    yRatio = marginY + ratioFromSeed(seedY) * (1 - marginY * 2);
+  }
 
   return {
     id: key,
