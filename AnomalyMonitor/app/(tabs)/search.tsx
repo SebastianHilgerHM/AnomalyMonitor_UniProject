@@ -48,7 +48,7 @@ export default function Search() {
   const [showToPicker, setShowToPicker] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string|null>;
+  const [error, setError] = useState<string|null>(null);
   const [results, setresults] = useState<SearchItem[]>([]);
 
   const fromLabel = useMemo(() => formatDateForUI(fromDate), [fromDate]);
