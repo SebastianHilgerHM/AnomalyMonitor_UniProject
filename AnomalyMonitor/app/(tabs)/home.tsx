@@ -8,6 +8,7 @@ import { spacing, colors } from '../../constants/theme';
 export default function Home() {
   return (
     <View style={styles.container}>
+      {/* Static hero/content block for the app landing tab. */}
       <Img source={require('../../assets/images/heroimage.jpg')} alt="Placeholder" style={{}} />
       <SubTitle title="NASA ANOMALY MONITOR" />
       <Title title="Home" />

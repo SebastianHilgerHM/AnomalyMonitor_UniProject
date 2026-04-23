@@ -17,21 +17,26 @@ export default function NewAnomaly() {
   const router = useRouter();
 
   const handleSave = () => {
+    // Trim inputs so whitespace-only values do not pass validation.
     const cleanName = name.trim();
     const cleanDescription= description.trim();
 
+    // Require the core report fields before creating an anomaly.
     if (!cleanName || !cleanDescription) return;
 
+    // Persist in context so the new item appears immediately in My Anomalies.
     addAnomaly({
       title:cleanName,
       description: cleanDescription,
       imageUri: imageUri ?? undefined,
     });
 
+    // Reset local form state after successful save.
     setName('');
     setDescription('');
     setImageUri(null);
 
+    // Route user to the saved anomalies list.
     router.push('/(tabs)/myanomalies');
   };
 

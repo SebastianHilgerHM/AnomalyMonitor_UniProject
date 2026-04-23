@@ -1,15 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { WORLDMAP_LAND_MASK } from '../constants/worldmapLandMask';
-
-type ApodApiItem = {
-  date: string;
-  title: string;
-  explanation: string;
-  media_type: string;
-  copyright?: string;
-  url?: string;
-  hdurl?: string;
-};
+import { ApodApiItem, fetchApodRange } from './apodApi';
 
 export type MapScatterPoint = {
   id: string;
@@ -22,30 +13,18 @@ export type MapScatterPoint = {
   yRatio: number;
 };
 
-const APOD_API_KEY = 'DEMO_KEY';
 const TARGET_COUNT = 20;
 const WINDOW_DAYS = 30;
 const MAX_WINDOWS = 8;
-const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
-const MAX_RETRIES = 2;
 
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function formatDateForApi(d: Date) {
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return year + '-' + month + '-' + day;
-}
-
+// Returns a cloned date shifted by N days to avoid mutating source dates.
 function addDays(date: Date, days: number) {
   const clone = new Date(date);
   clone.setDate(clone.getDate() + days);
   return clone;
 }
 
+// Stable hash so each APOD item always maps to the same pseudo-random point.
 function hashString(value: string) {
   let hash = 2166136261;
   for (let i = 0; i < value.length; i++) {
@@ -55,6 +34,7 @@ function hashString(value: string) {
   return hash >>> 0;
 }
 
+// Convert integer hash into a 0..1 ratio for coordinate math.
 function ratioFromSeed(seed: number) {
   return (seed % 10000) / 10000;
 }
@@ -68,6 +48,7 @@ function buildScatterPoint(item: ApodApiItem): MapScatterPoint {
   let yRatio: number;
 
   if (WORLDMAP_LAND_MASK.length > 0) {
+    // Land-mask mode: pick a deterministic land pixel from the generated mask.
     const index = seedX % WORLDMAP_LAND_MASK.length;
     const [maskX, maskY] = WORLDMAP_LAND_MASK[index];
 
@@ -78,6 +59,7 @@ function buildScatterPoint(item: ApodApiItem): MapScatterPoint {
     xRatio = Math.min(0.995, Math.max(0.005, maskX + jitterX));
     yRatio = Math.min(0.995, Math.max(0.005, maskY + jitterY));
   } else {
+    // Fallback mode if mask is unavailable: bounded random scatter.
     const marginX = 0.03;
     const marginY = 0.08;
     xRatio = marginX + ratioFromSeed(seedX) * (1 - marginX * 2);
@@ -97,43 +79,8 @@ function buildScatterPoint(item: ApodApiItem): MapScatterPoint {
 }
 
 async function fetchApodWindow(startDate: Date, endDate: Date) {
-  const url =
-    'https://api.nasa.gov/planetary/apod?api_key=' +
-    APOD_API_KEY +
-    '&start_date=' +
-    formatDateForApi(startDate) +
-    '&end_date=' +
-    formatDateForApi(endDate);
-
-  let response: Response | null = null;
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const currentResponse = await fetch(url);
-    if (currentResponse.ok) {
-      response = currentResponse;
-      break;
-    }
-
-    const shouldRetry = RETRYABLE_STATUS.has(currentResponse.status) && attempt < MAX_RETRIES;
-    if (!shouldRetry) {
-      if (currentResponse.status === 503) {
-        throw new Error('NASA APOD is temporarily unavailable (503). Please try again in a minute.');
-      }
-      if (currentResponse.status === 429) {
-        throw new Error('Too many APOD requests right now (429). Please wait a bit and retry.');
-      }
-      throw new Error('APOD request failed with status ' + currentResponse.status);
-    }
-
-    await wait(800 * (attempt + 1));
-  }
-
-  if (!response) {
-    throw new Error('APOD request failed after multiple retries.');
-  }
-
-  const payload = (await response.json()) as ApodApiItem[] | ApodApiItem;
-  const data = Array.isArray(payload) ? payload : [payload];
-
+  // Fetch a date window, then keep only entries that can render an image preview.
+  const data = await fetchApodRange(startDate, endDate);
   return data
     .filter((item) => item.media_type === 'image')
     .filter((item) => Boolean(item.hdurl || item.url))
@@ -146,6 +93,7 @@ export function useApodMapScatter() {
   const [points, setPoints] = useState<MapScatterPoint[]>([]);
 
   const load = useCallback(async () => {
+    // Reset state before loading a fresh scatter dataset.
     setLoading(true);
     setError(null);
 
@@ -153,10 +101,12 @@ export function useApodMapScatter() {
       const collected = new Map<string, ApodApiItem>();
       let cursorEnd = new Date();
 
+      // Walk backwards from today in windows until we collect TARGET_COUNT items.
       for (let windowIndex = 0; windowIndex < MAX_WINDOWS && collected.size < TARGET_COUNT; windowIndex++) {
         const cursorStart = addDays(cursorEnd, -(WINDOW_DAYS - 1));
         const batch = await fetchApodWindow(cursorStart, cursorEnd);
 
+        // De-duplicate by date+title so repeated entries across windows are ignored.
         for (const item of batch) {
           const key = item.date + '|' + item.title;
           if (!collected.has(key)) {
@@ -178,15 +128,18 @@ export function useApodMapScatter() {
 
       setPoints(latest);
     } catch (e) {
+      // Keep errors visible in UI and clear stale points on failure.
       const message = e instanceof Error ? e.message : 'Unknown error';
       setError(message);
       setPoints([]);
     } finally {
+      // Always clear loading state at the end of a load attempt.
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
+    // Auto-load points on first mount.
     void load();
   }, [load]);
 

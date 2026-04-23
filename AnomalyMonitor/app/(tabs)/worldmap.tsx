@@ -14,8 +14,10 @@ const worldMapAspectRatio = worldMapMeta.width / worldMapMeta.height;
 export default function WorldMap() {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
+  // Hook provides latest APOD points plus loading/error and manual reload.
   const { loading, error, points, reload } = useApodMapScatter();
 
+  // Derive responsive map canvas size while preserving original image ratio.
   const baseMapHeight = Math.max(Math.min(height * 0.74, 560), 320);
   const mapScale = 1.15;
   const mapHeight = baseMapHeight * mapScale;
@@ -30,7 +32,9 @@ export default function WorldMap() {
           <Text style={styles.metaText}>Showing latest {points.length} APOD image results</Text>
         </View>
         <View style={styles.headerButtons}>
+          {/* Force a fresh fetch/scatter pass for the latest APOD set. */}
           <SmallButton label="Reload" onPress={() => void reload()} />
+          {/* Always return to the Search tab regardless of navigation history. */}
           <SmallButton label="Back" onPress={() => router.replace('/(tabs)/search')} />
         </View>
       </View>
@@ -48,6 +52,7 @@ export default function WorldMap() {
             resizeMode="contain"
           />
 
+          {/* Render each APOD point as an interactive preview card at scatter coordinates. */}
           {points.map((point) => (
             <MapPreviewCard
               key={point.id}
@@ -67,6 +72,7 @@ export default function WorldMap() {
             />
           ))}
 
+          {/* Loading and error overlays keep map layout stable while data state changes. */}
           {loading && (
             <View style={styles.overlayCenter}>
               <ActivityIndicator color={colors.ctaaccent} />
@@ -90,7 +96,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     paddingTop: spacing.xl * 2,
-    //paddingHorizontal: spacing.md,
     gap: spacing.md,
   },
   header: {
@@ -143,9 +148,13 @@ const styles = StyleSheet.create({
     fontSize: fontsize.b3,
   },
   errorText: {
-    color: '#000000',
-    fontSize: fontsize.b3,
+    color: '#ef4444',
+    fontSize: fontsize.b1,
+    fontWeight: '700',
     textAlign: 'center',
     paddingHorizontal: spacing.md,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
 });

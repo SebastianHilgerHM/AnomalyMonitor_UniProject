@@ -16,6 +16,7 @@ function formatDateForUI(d: Date) {
 
 export default function Search() {
   const router = useRouter();
+  // Start with a default one-week window to make first search quick.
   const [fromDate, setFromDate] = useState<Date>(() =>  {
     const d = new Date();
     d.setDate(d.getDate() - 7);
@@ -30,16 +31,19 @@ export default function Search() {
   const toLabel = useMemo(() => formatDateForUI(toDate), [toDate]);
 
   const onChangeFrom = (event:DateTimePickerEvent, selectedDate?: Date) => {
+    // Android pickers are modal; close after a date is chosen/canceled.
     if (Platform.OS === 'android') setShowFromPicker(false);
     if (selectedDate) setFromDate(selectedDate);
   }
 
   const onChangeTo = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    // Android pickers are modal; close after a date is chosen/canceled.
     if (Platform.OS === 'android') setShowToPicker(false);
     if (selectedDate) setToDate(selectedDate);
   };
 
   const handleSearch = async () => {
+    // Delegate API request/filtering logic to the dedicated search hook.
     await search(fromDate, toDate);
   };
 

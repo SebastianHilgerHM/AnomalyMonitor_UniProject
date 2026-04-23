@@ -13,9 +13,11 @@ export default function MyAnomalies() {
       <SubTitle title="ASSIGNED TO YOU" />
       <Title title="My Anomalies" />
 
+      {/* Show a fallback when nothing has been saved in memory yet. */}
       {anomalies.length === 0 ? (
         <Text style={styles.empty}>No anomalies saved yet.</Text>
       ) : (
+        // Render current in-memory anomalies from newest to oldest.
         anomalies.map((item) => (
           <AnomalyCard
             key={item.id}
