@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import SubTitle from '../../components/subtitle';
 import Title from '../../components/title';
 import SmallButton from '../../components/smallbutton';
+import MapPreviewCard from '../../components/mappreviewcard';
 import { colors, spacing, radius, fontsize } from '../../constants/theme';
 import useApodMapScatter from '../../hooks/useApodMapScatter';
 
@@ -48,13 +49,19 @@ export default function WorldMap() {
           />
 
           {points.map((point) => (
-            <View
+            <MapPreviewCard
               key={point.id}
-              style={[
-                styles.pin,
+              date={point.date}
+              title={point.title}
+              author={point.author}
+              desc={point.description}
+              source={{ uri: point.imageUrl }}
+              alt={point.title}
+              containerStyle={[
+                styles.previewPin,
                 {
-                  left: point.xRatio * mapWidth - 5,
-                  top: point.yRatio * mapHeight - 5,
+                  left: point.xRatio * mapWidth - 26,
+                  top: point.yRatio * mapHeight - 26,
                 },
               ]}
             />
@@ -117,15 +124,8 @@ const styles = StyleSheet.create({
   mapImage: {
     borderRadius: radius.sm,
   },
-  pin: {
+  previewPin: {
     position: 'absolute',
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: colors.ctaaccent,
-    borderWidth: 1,
-    borderColor: colors.bg,
-    opacity: 0.92,
   },
   overlayCenter: {
     position: 'absolute',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     fontSize: fontsize.b3,
   },
   errorText: {
-    color: '#ef4444',
+    color: '#000000',
     fontSize: fontsize.b3,
     textAlign: 'center',
     paddingHorizontal: spacing.md,

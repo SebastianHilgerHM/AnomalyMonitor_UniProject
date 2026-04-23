@@ -3,7 +3,9 @@ import { useCallback, useEffect, useState } from 'react';
 type ApodApiItem = {
   date: string;
   title: string;
+  explanation: string;
   media_type: string;
+  copyright?: string;
   url?: string;
   hdurl?: string;
 };
@@ -12,6 +14,9 @@ export type MapScatterPoint = {
   id: string;
   date: string;
   title: string;
+  description: string;
+  author: string;
+  imageUrl: string;
   xRatio: number;
   yRatio: number;
 };
@@ -67,6 +72,9 @@ function buildScatterPoint(item: ApodApiItem): MapScatterPoint {
     id: key,
     date: item.date,
     title: item.title,
+    description: item.explanation,
+    author: item.copyright?.trim() || 'Unknown APOD author',
+    imageUrl: item.hdurl || item.url || '',
     xRatio,
     yRatio,
   };
